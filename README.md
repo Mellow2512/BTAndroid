@@ -2,36 +2,26 @@
 
 📒 **BTAndroid**
 
-Đây là nơi mình lưu các **bài tập & bài thực hành** trong quá trình học môn *Lập trình thiết bị di động*.
+Đây là nơi lưu các **bài tập & bài thực hành** trong quá trình học môn *Lập trình thiết bị di động*.
 
 ---
 
-## 1️⃣ [Hello Android](https://github.com/Mellow2512/BTAndroid/tree/main/HelloAndroid)
+## 1️⃣ [**Hello Android**](https://github.com/Mellow2512/BTAndroid/tree/main/HelloAndroid)
 - Bài tập demo đầu tiên trong học phần.  
 - Ứng dụng chỉ hiển thị dòng chữ **"Hello Android"** trên màn hình.  
 - Giúp làm quen với cấu trúc dự án Android Studio.
 
 ---
 
-## 2️⃣ [ViDuLayout1](https://github.com/Mellow2512/BTAndroid/tree/main/VDLayout1)
+## 2️⃣ [**ViDuLayout1**](https://github.com/Mellow2512/BTAndroid/tree/main/VDLayout1)
 - Bài tập luyện tập với **ConstraintLayout**.  
 - Học cách sắp xếp các thành phần giao diện theo quan hệ ràng buộc.  
 
-📷 *Giao diện ví dụ:*  
-| Màn hình demo |
-|---------------|
-| ![Layout demo](https://via.placeholder.com/250x450.png?text=Layout+Demo) |
-
 ---
 
-## 3️⃣ [SimpleMath](https://github.com/Mellow2512/BTAndroid/tree/main/SimpleMath)
+## 3️⃣ [**SimpleMath**](https://github.com/Mellow2512/BTAndroid/tree/main/SimpleMath)
 - Ứng dụng **máy tính đơn giản** với các phép tính cơ bản: cộng (+), trừ (-), nhân (×), chia (÷).  
 - Người dùng nhập số A, số B → chọn phép tính → hiển thị kết quả.  
-
-📷 *Giao diện ứng dụng:*  
-| Nhập số A | Nhập số B | Kết quả |
-|-----------|-----------|---------|
-| ![Input A](https://via.placeholder.com/120x240.png?text=Nhap+A) | ![Input B](https://via.placeholder.com/120x240.png?text=Nhap+B) | ![Result](https://via.placeholder.com/120x240.png?text=Ket+Qua) |
 
 ---
 
