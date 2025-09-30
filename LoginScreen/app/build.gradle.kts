@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace = "clc65.nguyentruong.loginscreen"
+    namespace = "th.nguyenphananhtai.loginscreen"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "clc65.nguyentruong.loginscreenfigma"
+        applicationId = "th.nguyenphananhtai.loginscreen"
         minSdk = 24
         targetSdk = 36
         versionCode = 1

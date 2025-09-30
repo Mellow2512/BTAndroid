@@ -196,7 +196,7 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="645dp"
+        android:layout_width="628dp"
         android:layout_height="367dp"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/bgtop"
