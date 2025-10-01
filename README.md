@@ -19,10 +19,18 @@
 
 ---
 
-## 3️⃣ [**SimpleMath**](https://github.com/Mellow2512/BTAndroid/tree/main/SimpleMath)
+## 3️⃣ [**lamthemSimpleMath**](https://github.com/Mellow2512/BTAndroid/tree/main/SimpleMath)
 
 * Ứng dụng **máy tính đơn giản** với các phép tính cơ bản: cộng (+), trừ (-), nhân (×), chia (÷).
 * Người dùng nhập số A, số B → chọn phép tính → hiển thị kết quả.
+
+### * Màn hình giao diện trước khi tính toán
+
+<img src="./Image/Screenshot_20251001_072853.png" width="150px"/>
+
+### * Sau khi tính toán
+
+<img src="./Image/Screenshot_20251001_072901.png" width="150px"/>
 
 ---
 
@@ -30,6 +38,6 @@
 
 * Giao diện đăng nhập dành cho người dùng bắt mắt và thân thiện.
 
-<img src="./Image/Screenshot_20251001_010515.png" width="150px" style="text-align: center;"/>
+<img src="./Image/Screenshot_20251001_010515.png" width="150px"/>
 
 ✨ *README này sẽ được cập nhật khi có thêm bài tập mới.*
