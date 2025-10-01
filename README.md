@@ -19,7 +19,7 @@
 
 ---
 
-## 3️⃣ [**lamthemSimpleMath**](https://github.com/Mellow2512/BTAndroid/tree/main/SimpleMath)
+## 3️⃣ [**lamthemSimpleMath**](https://github.com/Mellow2512/BTAndroid/tree/main/lamthemSimpleMath)
 
 * Ứng dụng **máy tính đơn giản** với các phép tính cơ bản: cộng (+), trừ (-), nhân (×), chia (÷).
 * Người dùng nhập số A, số B → chọn phép tính → hiển thị kết quả.
