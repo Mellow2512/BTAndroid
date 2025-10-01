@@ -24,11 +24,11 @@
 * Ứng dụng **máy tính đơn giản** với các phép tính cơ bản: cộng (+), trừ (-), nhân (×), chia (÷).
 * Người dùng nhập số A, số B → chọn phép tính → hiển thị kết quả.
 
-### * Màn hình giao diện trước khi tính toán
+### * Màn hình giao diện trước khi tính toán:
 
 <img src="./Image/Screenshot_20251001_072853.png" width="150px"/>
 
-### * Sau khi tính toán
+### * Sau khi tính toán:
 
 <img src="./Image/Screenshot_20251001_072901.png" width="150px"/>
 
@@ -36,8 +36,17 @@
 
 ## 4️⃣ [**LoginScreen**](https://github.com/Mellow2512/BTAndroid/tree/main/LoginScreen)
 
-* Giao diện đăng nhập dành cho người dùng bắt mắt và thân thiện.
+* Giao diện đăng nhập dành cho người dùng bắt mắt và thân thiện:
 
 <img src="./Image/Screenshot_20251001_010515.png" width="150px"/>
+
+---
+
+## 5️⃣ [**VDLayout2**](https://github.com/Mellow2512/BTAndroid/tree/main/VDLayout2)
+
+* Bài tập làm quen với **LinearLayout**
+* Giao diện với 4 nút chức năng:
+
+---
 
 ✨ *README này sẽ được cập nhật khi có thêm bài tập mới.*
