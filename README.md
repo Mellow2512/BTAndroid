@@ -30,6 +30,6 @@
 
 * Giao diện đăng nhập dành cho người dùng bắt mắt và thân thiện.
 
-<img src="./Image/Screenshot_20251001_010515.png" width="150px"\>
+<img src="./Image/Screenshot_20251001_010515.png" width="150px"/>
 
 ✨ *README này sẽ được cập nhật khi có thêm bài tập mới.*
