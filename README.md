@@ -44,8 +44,8 @@
 
 ## 5️⃣ [**VDLayout2**](https://github.com/Mellow2512/BTAndroid/tree/main/VDLayout2)
 
-* Bài tập làm quen với **LinearLayout**
-* Giao diện với 4 nút chức năng:
+* Bài tập làm quen với **LinearLayout**.
+* Giao diện với 4 nút chức năng cơ bản.
 
 ---
 
