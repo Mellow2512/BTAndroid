@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F5F5F5"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp"
+        android:gravity="center">
+
+        <!-- Header -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="🧮 Quiz Toán Học"
+            android:textSize="32sp"
+            android:textStyle="bold"
+            android:textColor="#2196F3"
+            android:layout_marginBottom="10dp"/>
+
+        <!-- Question Number -->
+        <TextView
+            android:id="@+id/tvQuestionNumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Câu 1/10"
+            android:textSize="18sp"
+            android:textColor="#666666"
+            android:layout_marginBottom="5dp"/>
+
+        <!-- Score -->
+        <TextView
+            android:id="@+id/tvScore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Điểm: 0"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="#4CAF50"
+            android:layout_marginBottom="30dp"/>
+
+        <!-- Question Card -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="30dp"
+            android:elevation="4dp"
+            android:radius="12dp">
+
+            <TextView
+                android:id="@+id/tvQuestion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="5 + 3 = ?"
+                android:textSize="36sp"
+                android:textStyle="bold"
+                android:textColor="#333333"
+                android:gravity="center"
+                android:padding="40dp"
+                android:background="#FFFFFF"/>
+
+        </androidx.cardview.widget.CardView>
+
+        <!-- Options Layout 2x2 Grid -->
+        <LinearLayout
+            android:id="@+id/layoutOptions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Row 1 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="15dp">
+
+                <!-- Option 1 -->
+                <Button
+                    android:id="@+id/btnOption1"
+                    android:layout_width="0dp"
+                    android:layout_height="120dp"
+                    android:layout_weight="1"
+                    android:text="8"
+                    android:textSize="28sp"
+                    android:textStyle="bold"
+                    android:textColor="#FFFFFF"
+                    android:background="#2196F3"
+                    android:layout_marginEnd="8dp"
+                    android:elevation="2dp"
+                    android:stateListAnimator="@null"/>
+
+                <!-- Option 2 -->
+                <Button
+                    android:id="@+id/btnOption2"
+                    android:layout_width="0dp"
+                    android:layout_height="120dp"
+                    android:layout_weight="1"
+                    android:text="7"
+                    android:textSize="28sp"
+                    android:textStyle="bold"
+                    android:textColor="#FFFFFF"
+                    android:background="#2196F3"
+                    android:layout_marginStart="8dp"
+                    android:elevation="2dp"
+                    android:stateListAnimator="@null"/>
+
+            </LinearLayout>
+
+            <!-- Row 2 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <!-- Option 3 -->
+                <Button
+                    android:id="@+id/btnOption3"
+                    android:layout_width="0dp"
+                    android:layout_height="120dp"
+                    android:layout_weight="1"
+                    android:text="9"
+                    android:textSize="28sp"
+                    android:textStyle="bold"
+                    android:textColor="#FFFFFF"
+                    android:background="#2196F3"
+                    android:layout_marginEnd="8dp"
+                    android:elevation="2dp"
+                    android:stateListAnimator="@null"/>
+
+                <!-- Option 4 -->
+                <Button
+                    android:id="@+id/btnOption4"
+                    android:layout_width="0dp"
+                    android:layout_height="120dp"
+                    android:layout_weight="1"
+                    android:text="6"
+                    android:textSize="28sp"
+                    android:textStyle="bold"
+                    android:textColor="#FFFFFF"
+                    android:background="#2196F3"
+                    android:layout_marginStart="8dp"
+                    android:elevation="2dp"
+                    android:stateListAnimator="@null"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- Next Button -->
+        <Button
+            android:id="@+id/btnNext"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:text="Tiếp theo"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF"
+            android:background="#FF9800"
+            android:visibility="gone"
+            android:elevation="2dp"
+            android:stateListAnimator="@null"/>
+
+    </LinearLayout>
+
+</ScrollView>
