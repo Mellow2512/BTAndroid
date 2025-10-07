@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:id="@+id/main">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="140dp"
+        android:text="Tính tổng 2 số"
+        android:textColor="@color/white"
+        android:gravity="center"
+        android:textSize="50dp"
+        android:background="#D4A59D"
+        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+        <TextView
+            android:layout_width="100dp"
+            android:layout_height="30dp"
+            android:text="Nhập số A: "
+            android:layout_margin="10dp"
+            android:textSize="20dp"
+            />
+
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:layout_margin="10dp"
+                android:id="@+id/edtA"
+                />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+        <TextView
+            android:layout_width="100dp"
+            android:layout_height="30dp"
+            android:text="Nhập số B: "
+            android:layout_margin="10dp"
+            android:textSize="20dp"
+            />
+
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:layout_margin="10dp"
+            android:id="@+id/edtB"
+            />
+    </LinearLayout>
+    <Button
+        android:layout_width="100dp"
+        android:layout_height="107dp"
+        android:id="@+id/btnTinh"
+        android:text="Tính"
+        android:layout_margin="10dp"
+        android:backgroundTint="#FC8B65"
+        android:onClick="HamTinhTong"
+        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+        <TextView
+            android:layout_width="100dp"
+            android:layout_height="30dp"
+            android:text="Kết quả: "
+            android:layout_margin="10dp"
+            android:textSize="20dp"
+            />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:layout_margin="10dp"
+            android:textSize="20dp"
+            android:id="@+id/tvKetQua"
+            />
+    </LinearLayout>
+</LinearLayout>
+
