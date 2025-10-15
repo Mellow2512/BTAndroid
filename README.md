@@ -24,13 +24,9 @@
 * Ứng dụng **máy tính đơn giản** với các phép tính cơ bản: cộng (+), trừ (-), nhân (×), chia (÷).
 * Người dùng nhập số A, số B → chọn phép tính → hiển thị kết quả.
 
-### * Màn hình giao diện trước khi tính toán:
-
-<img src="./Image/Screenshot_20251001_072853.png" width="150px"/>
-
-### * Sau khi tính toán:
-
-<img src="./Image/Screenshot_20251001_072901.png" width="150px"/>
+|   Màn hình giao diện trước khi tính toán:                        |   Sau khi tính toán:                                             |
+|:----------------------------------------------------------------:|:----------------------------------------------------------------:|
+| <img src="./Image/Screenshot_20251001_072853.png" width="150px"/>| <img src="./Image/Screenshot_20251001_072901.png" width="150px"/>|
 
 ---
 
