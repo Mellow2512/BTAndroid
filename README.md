@@ -72,7 +72,7 @@
 
 * Kiểm tra tình trạng sức khỏe với ứng dụng tính BMI, với các mức **Thiếu cân**, **Bình thường**, **Thừa cân**, **Béo phì**.
 
-| * Trước khi tính toán được tình trạng sức khỏe:                  | * Sau khi tính toán được tình trạng sức khỏe:                    |
+|   Trước khi tính toán được tình trạng sức khỏe:                  |   Sau khi tính toán được tình trạng sức khỏe:                    |
 |:----------------------------------------------------------------:|:----------------------------------------------------------------:|
 | <img src="./Image/Screenshot_20251015_091246.png" width="150px"/>| <img src="./Image/Screenshot_20251015_091314.png" width="150px"/>|
 
