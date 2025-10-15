@@ -51,4 +51,10 @@
 
 ---
 
+## 6️⃣ [**SimpleQuiz**](https://github.com/Mellow2512/BTAndroid/tree/main/SimpleQuiz)
+
+* Ứng dụng Quiz đơn giản chọn đáp án đúng(10 câu Toán cơ bản):
+
+<img src="./Image/>
+
 ✨ *README này sẽ được cập nhật khi có thêm bài tập mới.*
