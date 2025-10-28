@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.zip.Inflater;
 
 public class LandScapeAdapter extends RecyclerView.Adapter<LandScapeAdapter.ItemLandHolder>{
@@ -35,7 +36,7 @@ public class LandScapeAdapter extends RecyclerView.Adapter<LandScapeAdapter.Item
     @Override
     public void onBindViewHolder(@NonNull ItemLandHolder holder, int position) {
         LandScape landScapeHienThi = lstData.get(position);
-        String caption = landScapeHienThi.getLandCation();
+        String caption = landScapeHienThi.getlandCaption();
         String tenFileAnh = landScapeHienThi.getLandImageFileName();
         holder.tvCapTion.setText(caption);
         String packageName = holder.itemView.getContext().getPackageName();
@@ -45,7 +46,7 @@ public class LandScapeAdapter extends RecyclerView.Adapter<LandScapeAdapter.Item
 
     @Override
     public int getItemCount() {
-        return 0;
+        return lstData.size();
     }
 
     public class ItemLandHolder extends RecyclerView.ViewHolder{
@@ -53,7 +54,7 @@ public class LandScapeAdapter extends RecyclerView.Adapter<LandScapeAdapter.Item
         ImageView ivLand;
         public ItemLandHolder(@NonNull View itemView) {
             super(itemView);
-            tvCapTion = itemView.findViewById(R.id.textViewCation);
+            tvCapTion = itemView.findViewById(R.id.textViewCaption);
             ivLand = itemView.findViewById(R.id.imageViewLand);
         }
     }

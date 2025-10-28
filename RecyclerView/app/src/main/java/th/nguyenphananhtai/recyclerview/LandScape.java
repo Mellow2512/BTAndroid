@@ -2,11 +2,11 @@ package th.nguyenphananhtai.recyclerview;
 
 public class LandScape {
     String landImageFileName;
-    String landCation;
+    String landCaption;
 
-    public LandScape(String landImageFileName, String landCation) {
+    public LandScape(String landImageFileName, String landCaption) {
         this.landImageFileName = landImageFileName;
-        this.landCation = landCation;
+        this.landCaption = landCaption;
     }
 
     public String getLandImageFileName() {
@@ -17,11 +17,11 @@ public class LandScape {
         this.landImageFileName = landImageFileName;
     }
 
-    public String getLandCation() {
-        return landCation;
+    public String getlandCaption() {
+        return landCaption;
     }
 
-    public void setLandCation(String landCation) {
-        this.landCation = landCation;
+    public void setlandCaption(String landCaption) {
+        this.landCaption = landCaption;
     }
 }

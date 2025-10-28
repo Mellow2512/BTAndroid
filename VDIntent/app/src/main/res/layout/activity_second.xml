@@ -7,4 +7,24 @@
     android:layout_height="match_parent"
     tools:context=".SecondActivity">
 
+    <Button
+        android:id="@+id/btnBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Back"
+        tools:layout_editor_absoluteX="289dp"
+        tools:layout_editor_absoluteY="638dp" />
+
+    <TextView
+        android:id="@+id/txtHoTen"
+        android:layout_width="194dp"
+        android:layout_height="157dp"
+        android:layout_marginStart="90dp"
+        android:layout_marginTop="100dp"
+        android:layout_marginEnd="90dp"
+        android:text="Họ và tên được hiện ở đây"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.486"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

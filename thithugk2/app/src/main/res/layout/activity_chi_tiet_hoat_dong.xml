@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!-- Header với nút back -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="@color/colorPrimary"
+        android:elevation="4dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="Chi tiết hoạt động"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Card chứa thông tin hoạt động -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:elevation="2dp"
+                android:radius="8dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <!-- Tên hoạt động -->
+                    <TextView
+                        android:id="@+id/tvTenHoatDong"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Ngày hội STEM năm 2025"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="24sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="8dp" />
+
+                    <!-- Thời gian -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="8dp">
+
+                        <TextView
+                            android:layout_width="120dp"
+                            android:layout_height="wrap_content"
+                            android:text="Thời gian:"
+                            android:textColor="#666666"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tvThoiGian"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="09/03/2025"
+                            android:textColor="#333333"
+                            android:textSize="16sp" />
+                    </LinearLayout>
+
+                    <!-- Địa điểm -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="8dp">
+
+                        <TextView
+                            android:layout_width="120dp"
+                            android:layout_height="wrap_content"
+                            android:text="Địa điểm:"
+                            android:textColor="#666666"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tvDiaDiem"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:text="Hội trường A - Trường Đại học Nha Trang"
+                            android:textColor="#333333"
+                            android:textSize="16sp" />
+                    </LinearLayout>
+
+                    <!-- Đơn vị tổ chức -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="8dp">
+
+                        <TextView
+                            android:layout_width="120dp"
+                            android:layout_height="wrap_content"
+                            android:text="Đơn vị tổ chức:"
+                            android:textColor="#666666"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tvDonVi"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:text="Phòng CTCT-SV"
+                            android:textColor="#333333"
+                            android:textSize="16sp" />
+                    </LinearLayout>
+
+                    <!-- Đối tượng tham gia -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="8dp">
+
+                        <TextView
+                            android:layout_width="120dp"
+                            android:layout_height="wrap_content"
+                            android:text="Đối tượng:"
+                            android:textColor="#666666"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tvDoiTuong"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:text="Toàn thể sinh viên"
+                            android:textColor="#333333"
+                            android:textSize="16sp" />
+                    </LinearLayout>
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Card mô tả hoạt động -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:elevation="2dp"
+                android:radius="8dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Giới thiệu"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="8dp" />
+
+                    <TextView
+                        android:id="@+id/tvMoTa"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Ngày hội STEM là sự kiện thường niên nhằm khuyến khích tinh thần học tập, nghiên cứu khoa học và đổi mới sáng tạo trong các lĩnh vực Khoa học, Công nghệ, Kỹ thuật và Toán học."
+                        android:textColor="#333333"
+                        android:textSize="16sp"
+                        android:lineSpacingExtra="4dp" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Card nội dung hoạt động -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:elevation="2dp"
+                android:radius="8dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Nội dung chương trình"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="8dp" />
+
+                    <TextView
+                        android:id="@+id/tvNoiDung"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="• Triển lãm các đề tài nghiên cứu khoa học\n• Hội thảo về xu hướng công nghệ mới\n• Cuộc thi sáng tạo robot\n• Workshop về AI và Machine Learning\n• Giao lưu với các chuyên gia trong ngành\n• Trao giải thưởng cho các đề tài xuất sắc"
+                        android:textColor="#333333"
+                        android:textSize="16sp"
+                        android:lineSpacingExtra="4dp" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Card lợi ích -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:elevation="2dp"
+                android:radius="8dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Lợi ích khi tham gia"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="8dp" />
+
+                    <TextView
+                        android:id="@+id/tvLoiIch"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="• Được cộng điểm rèn luyện\n• Cơ hội giao lưu và học hỏi từ chuyên gia\n• Mở rộng kiến thức về công nghệ hiện đại\n• Kết nối với các bạn sinh viên cùng đam mê\n• Nhận chứng nhận tham gia"
+                        android:textColor="#333333"
+                        android:textSize="16sp"
+                        android:lineSpacingExtra="4dp" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/outline_arrow_back_24"
+                android:layout_gravity="bottom|end"
+                android:background="@color/colorPrimary"
+                android:padding="10dp"
+                android:layout_margin="10dp"
+                android:id="@+id/btnBack"
+                android:elevation="4dp"
+                />
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>
