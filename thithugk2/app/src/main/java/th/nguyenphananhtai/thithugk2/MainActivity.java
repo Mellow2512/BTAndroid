@@ -18,7 +18,6 @@ public class MainActivity extends AppCompatActivity {
     Button btnAboutMe;
     Button btnPuzzle;
 
-
     void TimDieuKhien(){
         btnCN2 = findViewById(R.id.mbtnCN2);
         btnCN3 = findViewById(R.id.mbtnCN3);
@@ -56,8 +55,5 @@ public class MainActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         TimDieuKhien();
         SuKien();
-
     }
-
-
 }
