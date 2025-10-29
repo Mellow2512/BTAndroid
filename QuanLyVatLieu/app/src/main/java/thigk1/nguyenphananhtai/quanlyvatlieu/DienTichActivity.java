@@ -54,19 +54,19 @@ public class DienTichActivity extends AppCompatActivity {
                 String ckStr = tieCR.getText().toString().trim();
 
                 if (gkStr.isEmpty() || ckStr.isEmpty()) {
-                    tvResult.setText("Vui lòng nhập đủ điểm!");
+                    tvResult.setText("Vui lòng nhập đủ số liệu!");
                     return;
                 }
 
                 try {
-                    float diemGK = Float.parseFloat(gkStr);
-                    float diemCK = Float.parseFloat(ckStr);
+                    float CD = Float.parseFloat(gkStr);
+                    float CR = Float.parseFloat(ckStr);
 
-                    float diemTB = (diemGK + diemCK) / 2;
+                    float dienTich = CD * CR;
 
-                    tvResult.setText("Diện tích: " + diemTB);
+                    tvResult.setText("Diện tích: " + dienTich);
                 } catch (NumberFormatException e) {
-                    tvResult.setText("Điểm nhập không hợp lệ!");
+                    tvResult.setText("Số liệu nhập không hợp lệ!");
                 }
             }
         });

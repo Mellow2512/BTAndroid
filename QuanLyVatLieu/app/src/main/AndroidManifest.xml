@@ -12,6 +12,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.QuanLyVatLieu">
         <activity
+            android:name=".ChiTietVatLieuActivity"
+            android:exported="false" />
+        <activity
+            android:name=".DSVatLieuActivity"
+            android:exported="false" />
+        <activity
             android:name=".DienTichActivity"
             android:exported="false" />
         <activity
