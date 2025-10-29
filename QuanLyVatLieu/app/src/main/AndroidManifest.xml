@@ -12,6 +12,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.QuanLyVatLieu">
         <activity
+            android:name=".AboutMeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ChiTietCongTrinhActivity"
+            android:exported="false" />
+        <activity
+            android:name=".CongTrinhActivity"
+            android:exported="false" />
+        <activity
             android:name=".ChiTietVatLieuActivity"
             android:exported="false" />
         <activity
