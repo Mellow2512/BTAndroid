@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.QuanLyVatLieu">
         <activity
+            android:name=".ActivityPuzzle"
+            android:exported="false" />
+        <activity
             android:name=".AboutMeActivity"
             android:exported="false" />
         <activity
@@ -24,7 +27,7 @@
             android:name=".ChiTietVatLieuActivity"
             android:exported="false" />
         <activity
-            android:name=".DSVatLieuActivity"
+            android:name=".VatLieuActivity"
             android:exported="false" />
         <activity
             android:name=".DienTichActivity"
