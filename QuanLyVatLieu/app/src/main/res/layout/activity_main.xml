@@ -88,6 +88,5 @@
             app:cornerRadius="20dp"
             app:strokeColor="@color/black"
             app:strokeWidth="1dp" />
-
     </GridLayout>
 </LinearLayout>
