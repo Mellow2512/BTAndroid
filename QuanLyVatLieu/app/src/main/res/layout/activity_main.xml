@@ -14,72 +14,80 @@
 
     <!-- Logo giữa -->
     <ImageView
-        android:layout_width="150dp"
-        android:layout_height="150dp"
+        android:layout_width="180dp"
+        android:layout_height="180dp"
         android:src="@mipmap/building_logo"
         android:layout_gravity="center"
-        android:translationY="-100dp" />
+        android:translationY="-187dp" />
 
     <!-- GridLayout chứa 4 button 2x2 -->
     <GridLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:columnCount="2"
-        android:alignmentMode="alignMargins"
-        android:useDefaultMargins="true"
+        android:alignmentMode="alignBounds"
+        android:useDefaultMargins="false"
         android:layout_gravity="center"
-        android:translationY="-80dp">
+        android:gravity="center"
+        android:paddingHorizontal="32dp"
+        android:rowCount="2"
+        android:translationY="-100dp">
 
-        <!-- Nút 1 -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/mbtnCN2"
-            android:layout_width="150dp"
+            android:layout_width="0dp"
             android:layout_height="100dp"
-            android:text="Chức năng 2"
-            android:textSize="18sp"
+            android:layout_columnWeight="1"
+            android:layout_margin="8dp"
+            android:text="Tính diện tích"
+            android:textSize="17sp"
             android:textColor="@color/white"
             android:backgroundTint="@color/colorSecondary"
             app:cornerRadius="20dp"
             app:strokeColor="@color/black"
             app:strokeWidth="1dp" />
 
-        <!-- Nút 2 -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/mbtnCN3"
-            android:layout_width="150dp"
+            android:layout_width="0dp"
             android:layout_height="100dp"
-            android:text="Chức năng 3"
-            android:textSize="18sp"
+            android:layout_columnWeight="1"
+            android:layout_margin="8dp"
+            android:text="Vật liệu"
+            android:textSize="17sp"
             android:textColor="@color/white"
             android:backgroundTint="@color/colorSecondary"
             app:cornerRadius="20dp"
             app:strokeColor="@color/black"
             app:strokeWidth="1dp" />
 
-        <!-- Nút 3 -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/mbtnCN4"
-            android:layout_width="150dp"
+            android:layout_width="0dp"
             android:layout_height="100dp"
-            android:text="Chức năng 4"
-            android:textSize="18sp"
+            android:layout_columnWeight="1"
+            android:layout_margin="8dp"
+            android:text="Công trình"
+            android:textSize="17sp"
             android:textColor="@color/white"
             android:backgroundTint="@color/colorSecondary"
             app:cornerRadius="20dp"
             app:strokeColor="@color/black"
             app:strokeWidth="1dp" />
 
-        <!-- Nút 4 -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/mbtnAboutMe"
-            android:layout_width="150dp"
+            android:layout_width="0dp"
             android:layout_height="100dp"
-            android:text="About Me"
-            android:textSize="18sp"
+            android:layout_columnWeight="1"
+            android:layout_margin="8dp"
+            android:text="Giới thiệu"
+            android:textSize="17sp"
             android:textColor="@color/white"
             android:backgroundTint="@color/colorSecondary"
             app:cornerRadius="20dp"
             app:strokeColor="@color/black"
             app:strokeWidth="1dp" />
+
     </GridLayout>
 </LinearLayout>
