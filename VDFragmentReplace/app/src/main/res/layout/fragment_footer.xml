@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
+    tools:context=".FooterFragment"
+    android:background="#009DD9"
+    android:gravity="center">
+
+    <Button
+        android:id="@+id/btn1"
+        android:layout_height="70dp"
+        android:layout_width="110dp"
+        android:layout_gravity="center"
+        app:strokeWidth="5dp"
+        app:strokeColor="@color/white"
+        android:text="One"
+        android:textSize="18sp"
+        android:backgroundTint="#03A9F4"
+        />
+
+    <Button
+        android:id="@+id/btn2"
+        android:layout_height="70dp"
+        android:layout_width="110dp"
+        android:layout_gravity="center"
+        android:layout_marginStart="20dp"
+        app:strokeWidth="5dp"
+        app:strokeColor="@color/white"
+        android:text="Two"
+        android:textSize="18sp"
+        android:backgroundTint="#03A9F4"
+        />
+
+    <Button
+        android:id="@+id/btn3"
+        android:layout_height="70dp"
+        android:layout_width="110dp"
+        android:layout_gravity="center"
+        android:layout_marginStart="20dp"
+        app:strokeWidth="5dp"
+        app:strokeColor="@color/white"
+        android:text="Three"
+        android:textSize="18sp"
+        android:backgroundTint="#03A9F4"
+        />
+
+</LinearLayout>
