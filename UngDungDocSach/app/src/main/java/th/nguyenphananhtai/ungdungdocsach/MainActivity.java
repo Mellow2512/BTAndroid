@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
 
     CardView cardLibrary, cardCategory, cardFavorite, cardSettings;
 
-    CardView imgProfile;
+    ImageView imgProfile;
     TextView tvUsername;
 
     Handler sliderHandler = new Handler();
@@ -111,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, LibraryActivity.class)));
 
         cardCategory.setOnClickListener(v ->
-                startActivity(new Intent(MainActivity.this, CategoryActivity.class)));
+                startActivity(new Intent(MainActivity.this, ReadingHistoryActivity.class)));
 
         cardFavorite.setOnClickListener(v ->
                 startActivity(new Intent(MainActivity.this, FavoriteActivity.class)));

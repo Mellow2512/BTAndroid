@@ -1,12 +1,16 @@
 package th.nguyenphananhtai.ungdungdocsach;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+
+import com.bumptech.glide.Glide;
 
 public class BookDetailActivity extends AppCompatActivity {
 
@@ -15,6 +19,10 @@ public class BookDetailActivity extends AppCompatActivity {
     private TextView tvPagesDetail, tvCategoryDetail, tvDescriptionDetail;
     private CardView btnReadNow, btnDownload;
 
+    private LocalDataManager dataManager;
+    private String userId;
+    private String bookId;
+    private Book currentBook;
     private boolean isFavorite = false;
 
     @Override
@@ -22,17 +30,24 @@ public class BookDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_detail);
 
-        // Initialize views
+        // Initialize Local Data Manager
+        dataManager = LocalDataManager.getInstance(this);
+
+        SharedPreferences prefs = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+        userId = prefs.getString("userId", "guest_" + System.currentTimeMillis());
+
         initViews();
 
-        // Get book data from intent
-        String bookTitle = getIntent().getStringExtra("bookTitle");
-        int bookId = getIntent().getIntExtra("bookId", -1);
+        bookId = getIntent().getStringExtra("bookId");
 
-        // Load book details (thay bằng dữ liệu thật từ database)
-        loadBookDetails(bookId);
+        if (bookId != null) {
+            loadBookDetails(bookId);
+            checkFavoriteStatus();
+        } else {
+            Toast.makeText(this, "Lỗi: Không tìm thấy sách", Toast.LENGTH_SHORT).show();
+            finish();
+        }
 
-        // Setup click listeners
         setupClickListeners();
     }
 
@@ -50,48 +65,125 @@ public class BookDetailActivity extends AppCompatActivity {
         btnDownload = findViewById(R.id.btnDownload);
     }
 
-    private void loadBookDetails(int bookId) {
-        // TODO: Load từ database thật
-        // Hiện tại dùng dữ liệu mẫu
+    private void loadBookDetails(String bookId) {
+        dataManager.getBookByIdAsync(bookId, new LocalDataManager.OnBookLoadedListener() {
+            @Override
+            public void onBookLoaded(Book book) {
+                currentBook = book;
+                displayBookDetails(book);
+            }
 
-        tvBookTitleDetail.setText("Đắc Nhân Tâm");
-        tvAuthorDetail.setText("Dale Carnegie");
-        tvRatingDetail.setText("4.8");
-        tvPagesDetail.setText("320");
-        tvCategoryDetail.setText("Kỹ năng sống");
-        tvDescriptionDetail.setText("Đắc Nhân Tâm của Dale Carnegie là quyển sách nổi tiếng nhất, " +
-                "bán chạy nhất và có tầm ảnh hưởng nhất của mọi thời đại. Tác phẩm đã được chuyển ngữ " +
-                "sang hầu hết các thứ tiếng trên thế giới và có mặt ở hàng trăm quốc gia. " +
-                "\n\nĐây là quyển sách duy nhất về thể loại self-help liên tục đứng đầu danh mục sách " +
-                "bán chạy nhất (best-selling Books) do báo The New York Times bình chọn suốt 10 năm liền. " +
-                "\n\nTrong cuốn sách này, Dale Carnegie đã đúc kết những bí quyết vàng để giao tiếp và " +
-                "ứng xử với mọi người một cách khéo léo, tạo được thiện cảm ngay từ những giây phút đầu tiên.");
+            @Override
+            public void onError(String error) {
+                Toast.makeText(BookDetailActivity.this,
+                        "Lỗi tải sách: " + error,
+                        Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        });
+    }
 
-        imgBookCoverDetail.setImageResource(R.drawable.book1);
+    private void displayBookDetails(Book book) {
+        tvBookTitleDetail.setText(book.getTitle());
+        tvAuthorDetail.setText(book.getAuthor());
+        tvRatingDetail.setText(String.format("%.1f", book.getRating()));
+        tvPagesDetail.setText(String.valueOf(book.getPages()));
+        tvCategoryDetail.setText(book.getCategory());
+        tvDescriptionDetail.setText(book.getDescription());
+
+        // Load cover image with Glide
+        Glide.with(this)
+                .load(book.getCoverUrl())
+                .placeholder(R.drawable.book_placeholder)
+                .error(R.drawable.book_placeholder)
+                .centerCrop()
+                .into(imgBookCoverDetail);
+
+        // Lưu vào lịch sử đọc
+        saveToReadingHistory(book);
+    }
+
+    private void checkFavoriteStatus() {
+        dataManager.isFavoriteAsync(userId, bookId, isFav -> {
+            isFavorite = isFav;
+            updateFavoriteIcon();
+        });
+    }
+
+    private void updateFavoriteIcon() {
+        if (isFavorite) {
+            btnFavoriteDetail.setImageResource(R.drawable.ic_favorite_filled);
+        } else {
+            btnFavoriteDetail.setImageResource(R.drawable.ic_favorite_border);
+        }
     }
 
     private void setupClickListeners() {
         btnBack.setOnClickListener(v -> finish());
 
-        btnFavoriteDetail.setOnClickListener(v -> {
-            isFavorite = !isFavorite;
-            if (isFavorite) {
-                btnFavoriteDetail.setImageResource(R.drawable.ic_favorite_filled);
-                Toast.makeText(this, "Đã thêm vào yêu thích", Toast.LENGTH_SHORT).show();
-            } else {
-                btnFavoriteDetail.setImageResource(R.drawable.ic_favorite_border);
-                Toast.makeText(this, "Đã xóa khỏi yêu thích", Toast.LENGTH_SHORT).show();
+        btnFavoriteDetail.setOnClickListener(v -> toggleFavorite());
+
+        btnReadNow.setOnClickListener(v -> {
+            if (currentBook != null) {
+                Toast.makeText(this, "Mở trình đọc sách: " + currentBook.getTitle(),
+                        Toast.LENGTH_SHORT).show();
             }
         });
 
-        btnReadNow.setOnClickListener(v -> {
-            // TODO: Navigate to Reader Activity
-            Toast.makeText(this, "Mở trình đọc sách", Toast.LENGTH_SHORT).show();
-        });
-
         btnDownload.setOnClickListener(v -> {
-            // TODO: Implement download functionality
-            Toast.makeText(this, "Đang tải xuống...", Toast.LENGTH_SHORT).show();
+            if (currentBook != null) {
+                Toast.makeText(this, "Đang tải xuống: " + currentBook.getTitle(),
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void toggleFavorite() {
+        if (currentBook == null) return;
+
+        if (isFavorite) {
+            dataManager.removeFromFavorites(userId, bookId,
+                    new LocalDataManager.OnOperationListener() {
+                        @Override
+                        public void onSuccess() {
+                            isFavorite = false;
+                            updateFavoriteIcon();
+                            Toast.makeText(BookDetailActivity.this,
+                                    "Đã xóa khỏi yêu thích",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        } else {
+            dataManager.addToFavorites(userId, bookId,
+                    new LocalDataManager.OnOperationListener() {
+                        @Override
+                        public void onSuccess() {
+                            isFavorite = true;
+                            updateFavoriteIcon();
+                            Toast.makeText(BookDetailActivity.this,
+                                    "Đã thêm vào yêu thích",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }
+    }
+
+    private void saveToReadingHistory(Book book) {
+        ReadingHistory history = new ReadingHistory(
+                book.getId(),
+                userId,
+                book.getTitle(),
+                book.getAuthor(),
+                book.getCoverUrl(),
+                book.getCategory(),
+                book.getPages()
+        );
+
+        dataManager.saveReadingHistory(userId, history, new LocalDataManager.OnOperationListener() {
+            @Override
+            public void onSuccess() {
+                Log.d("BookDetail", "Saved to reading history");
+            }
         });
     }
 }

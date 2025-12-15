@@ -58,8 +58,8 @@
             <!-- Profile Image với border -->
             <androidx.cardview.widget.CardView
                 android:id="@+id/imgProfile"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 app:cardCornerRadius="30dp"
@@ -99,7 +99,6 @@
 
             </androidx.cardview.widget.CardView>
 
-            <!-- Page Indicator -->
             <LinearLayout
                 android:id="@+id/indicatorLayout"
                 android:layout_width="wrap_content"
@@ -209,7 +208,7 @@
                         <TextView
                             android:layout_width="48dp"
                             android:layout_height="48dp"
-                            android:text="🏷️"
+                            android:text="📖"
                             android:textSize="32sp"
                             android:gravity="center"
                             android:background="@drawable/icon_circle_bg"
@@ -218,7 +217,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Danh mục"
+                            android:text="Lịch sử đọc"
                             android:textSize="16sp"
                             android:textStyle="bold"
                             android:textColor="#FFFFFF"
@@ -227,7 +226,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Phân loại"
+                            android:text="Đã xem"
                             android:textSize="12sp"
                             android:textColor="#FFFFFF"
                             android:alpha="0.9"
