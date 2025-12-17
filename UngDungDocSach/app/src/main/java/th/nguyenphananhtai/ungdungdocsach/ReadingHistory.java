@@ -7,16 +7,16 @@ public class ReadingHistory {
     private long lastReadTime;
     private int currentPage;
     private int totalPages;
-    private float progress; // Phần trăm đã đọc (0-100)
+    private float progress;
 
-    // Book info (denormalized for quick display)
+    // Denormalized book info
     private String bookTitle;
     private String bookAuthor;
-    private String bookCoverUrl;
+    private String bookCoverUrl;  // Phải khớp với Firebase
     private String bookCategory;
 
-    public ReadingHistory() {
-        // Constructor rỗng cho Firebase
+    // Constructor rỗng BẮT BUỘC cho Firebase
+    public ReadingHistory(String id, String userId, String title, String author, String coverUrl, String category, long pages) {
     }
 
     public ReadingHistory(String bookId, String userId, String bookTitle,
@@ -108,7 +108,7 @@ public class ReadingHistory {
         this.bookAuthor = bookAuthor;
     }
 
-    public String getBookCoverUrl() {
+    public String getBookCoverUrl() {  // GETTER ĐÚNG
         return bookCoverUrl;
     }
 

@@ -10,14 +10,18 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.chip.Chip;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +38,7 @@ public class ReadingHistoryActivity extends AppCompatActivity
     private ReadingHistoryAdapter adapter;
     private List<ReadingHistory> historyList;
 
-    private FirebaseManager firebaseManager;
+    private DatabaseReference databaseReference;
     private String userId;
 
     @Override
@@ -42,17 +46,12 @@ public class ReadingHistoryActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reading_history);
 
-        // Initialize Firebase
-        firebaseManager = FirebaseManager.getInstance();
-        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        // Initialize Firebase Database
+        databaseReference = FirebaseDatabase.getInstance().getReference();
 
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if (currentUser != null) {
-            userId = currentUser.getUid();
-        } else {
-            SharedPreferences prefs = getSharedPreferences("UserPrefs", MODE_PRIVATE);
-            userId = prefs.getString("userId", "guest_" + System.currentTimeMillis());
-        }
+        // Get userId from SharedPreferences
+        SharedPreferences prefs = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+        userId = prefs.getString("userId", "guest_" + System.currentTimeMillis());
 
         initViews();
         setupRecyclerView();
@@ -82,29 +81,38 @@ public class ReadingHistoryActivity extends AppCompatActivity
     }
 
     private void loadReadingHistory() {
-        firebaseManager.getReadingHistory(userId, new FirebaseManager.OnHistoryLoadedListener() {
-            @Override
-            public void onHistoryLoaded(List<ReadingHistory> histories) {
-                historyList.clear();
-                historyList.addAll(histories);
-                adapter.updateHistoryList(histories);
-                updateStats();
+        // Load from Firebase Realtime Database
+        databaseReference.child("reading_history").child(userId)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        historyList.clear();
 
-                if (histories.isEmpty()) {
-                    showEmptyState();
-                } else {
-                    hideEmptyState();
-                }
-            }
+                        for (DataSnapshot historySnapshot : snapshot.getChildren()) {
+                            ReadingHistory history = historySnapshot.getValue(ReadingHistory.class);
+                            if (history != null) {
+                                historyList.add(history);
+                            }
+                        }
 
-            @Override
-            public void onError(String error) {
-                Toast.makeText(ReadingHistoryActivity.this,
-                        "Lỗi: " + error,
-                        Toast.LENGTH_SHORT).show();
-                showEmptyState();
-            }
-        });
+                        adapter.updateHistoryList(historyList);
+                        updateStats();
+
+                        if (historyList.isEmpty()) {
+                            showEmptyState();
+                        } else {
+                            hideEmptyState();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Toast.makeText(ReadingHistoryActivity.this,
+                                "Lỗi: " + error.getMessage(),
+                                Toast.LENGTH_SHORT).show();
+                        showEmptyState();
+                    }
+                });
     }
 
     private void updateStats() {
@@ -161,22 +169,22 @@ public class ReadingHistoryActivity extends AppCompatActivity
     }
 
     private void clearAllHistory() {
-        firebaseManager.clearReadingHistory(userId, new FirebaseManager.OnOperationListener() {
-            @Override
-            public void onSuccess() {
-                Toast.makeText(ReadingHistoryActivity.this,
-                        "Đã xóa lịch sử",
-                        Toast.LENGTH_SHORT).show();
-                loadReadingHistory();
-            }
-
-            @Override
-            public void onError(String error) {
-                Toast.makeText(ReadingHistoryActivity.this,
-                        "Lỗi: " + error,
-                        Toast.LENGTH_SHORT).show();
-            }
-        });
+        databaseReference.child("reading_history").child(userId)
+                .removeValue()
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(ReadingHistoryActivity.this,
+                            "Đã xóa lịch sử",
+                            Toast.LENGTH_SHORT).show();
+                    historyList.clear();
+                    adapter.notifyDataSetChanged();
+                    updateStats();
+                    showEmptyState();
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(ReadingHistoryActivity.this,
+                            "Lỗi: " + e.getMessage(),
+                            Toast.LENGTH_SHORT).show();
+                });
     }
 
     private void showEmptyState() {
@@ -199,20 +207,15 @@ public class ReadingHistoryActivity extends AppCompatActivity
 
     @Override
     public void onContinueClick(ReadingHistory history) {
-        // TODO: Mở reader activity và tiếp tục đọc
+        // Tiếp tục đọc
         Toast.makeText(this,
                 "Tiếp tục đọc: " + history.getBookTitle(),
                 Toast.LENGTH_SHORT).show();
 
+        // TODO: Mở reader activity
         // Intent intent = new Intent(this, ReaderActivity.class);
         // intent.putExtra("bookId", history.getBookId());
         // intent.putExtra("currentPage", history.getCurrentPage());
         // startActivity(intent);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        loadReadingHistory();
     }
 }

@@ -1,35 +1,39 @@
 package th.nguyenphananhtai.ungdungdocsach;
 
 public class Book {
-    private int id;
+    private String id;
     private String title;
     private String author;
     private String category;
-    private int coverImage;
+    private String coverUrl;
     private float rating;
-    private int pages;
-    private boolean isFavorite;
+    private long pages;
     private String description;
+    private long createdAt;
 
-    public Book(int id, String title, String author, String category,
-                int coverImage, float rating, int pages, String description) {
+    public Book() {
+    }
+
+    // Constructor đầy đủ
+    public Book(String id, String title, String author, String category,
+                String coverUrl, float rating, int pages, String description) {
         this.id = id;
         this.title = title;
         this.author = author;
         this.category = category;
-        this.coverImage = coverImage;
+        this.coverUrl = coverUrl;
         this.rating = rating;
         this.pages = pages;
-        this.isFavorite = false;
         this.description = description;
+        this.createdAt = System.currentTimeMillis();
     }
 
-    // Getters and Setters
-    public int getId() {
+    // Getters và Setters - TÊN PHẢI KHỚP
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -57,12 +61,12 @@ public class Book {
         this.category = category;
     }
 
-    public int getCoverImage() {
-        return coverImage;
+    public String getCoverUrl() {  // ĐÂY LÀ GETTER ĐÚNG
+        return coverUrl;
     }
 
-    public void setCoverImage(int coverImage) {
-        this.coverImage = coverImage;
+    public void setCoverUrl(String coverUrl) {
+        this.coverUrl = coverUrl;
     }
 
     public float getRating() {
@@ -73,20 +77,12 @@ public class Book {
         this.rating = rating;
     }
 
-    public int getPages() {
+    public long getPages() {
         return pages;
     }
 
     public void setPages(int pages) {
         this.pages = pages;
-    }
-
-    public boolean isFavorite() {
-        return isFavorite;
-    }
-
-    public void setFavorite(boolean favorite) {
-        isFavorite = favorite;
     }
 
     public String getDescription() {
@@ -95,5 +91,13 @@ public class Book {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public long getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(long createdAt) {
+        this.createdAt = createdAt;
     }
 }

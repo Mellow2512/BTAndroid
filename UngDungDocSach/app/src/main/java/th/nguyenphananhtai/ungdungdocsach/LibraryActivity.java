@@ -1,6 +1,7 @@
 package th.nguyenphananhtai.ungdungdocsach;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -11,57 +12,56 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.chip.Chip;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class LibraryActivity extends AppCompatActivity implements BookAdapter.OnBookClickListener {
 
-    // Views
     private ImageView btnBack, btnFilter, btnClearSearch;
     private EditText searchView;
     private RecyclerView recyclerViewBooks;
     private TextView tvBookCount;
     private LinearLayout emptyState;
 
-    // Chips
     private Chip chipAll, chipNovel, chipScience, chipHistory, chipSelfHelp;
 
-    // Data
     private BookAdapter bookAdapter;
     private List<Book> bookList;
     private String currentCategory = "Tất cả";
+
+    private DatabaseReference databaseReference;
+    private String userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_library);
 
-        // Initialize views
+        // Initialize Firebase
+        databaseReference = FirebaseDatabase.getInstance().getReference();
+
+        // Get user ID
+        SharedPreferences prefs = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+        userId = prefs.getString("userId", "guest_" + System.currentTimeMillis());
+
         initViews();
-
-        // Setup books data
-        setupBooksData();
-
-        // Setup RecyclerView
         setupRecyclerView();
-
-        // Setup search functionality
+        loadBooksFromFirebase();
         setupSearch();
-
-        // Setup filter chips
         setupFilterChips();
-
-        // Setup click listeners
         setupClickListeners();
-
-        // Update book count
-        updateBookCount();
     }
 
     private void initViews() {
@@ -73,7 +73,6 @@ public class LibraryActivity extends AppCompatActivity implements BookAdapter.On
         tvBookCount = findViewById(R.id.tvBookCount);
         emptyState = findViewById(R.id.emptyState);
 
-        // Chips
         chipAll = findViewById(R.id.chipAll);
         chipNovel = findViewById(R.id.chipNovel);
         chipScience = findViewById(R.id.chipScience);
@@ -81,39 +80,68 @@ public class LibraryActivity extends AppCompatActivity implements BookAdapter.On
         chipSelfHelp = findViewById(R.id.chipSelfHelp);
     }
 
-    private void setupBooksData() {
-        bookList = new ArrayList<>();
-
-        // Thêm sách mẫu (Thay bằng dữ liệu thật từ database/API)
-        bookList.add(new Book(1, "Đắc Nhân Tâm", "Dale Carnegie", "Kỹ năng sống",
-                R.drawable.book1, 4.8f, 320, "Cuốn sách kinh điển về nghệ thuật giao tiếp"));
-
-        bookList.add(new Book(2, "Sapiens: Lược Sử Loài Người", "Yuval Noah Harari", "Lịch sử",
-                R.drawable.book2, 4.7f, 512, "Cuộc hành trình từ thời nguyên thủy đến hiện đại"));
-
-        bookList.add(new Book(3, "Nhà Giả Kim", "Paulo Coelho", "Tiểu thuyết",
-                R.drawable.book3, 4.6f, 240, "Hành trình tìm kiếm kho báu và chính mình"));
-
-        bookList.add(new Book(4, "Tư Duy Nhanh Và Chậm", "Daniel Kahneman", "Khoa học",
-                R.drawable.book1, 4.5f, 512, "Khám phá hai hệ thống tư duy của con người"));
-
-        bookList.add(new Book(5, "1984", "George Orwell", "Tiểu thuyết",
-                R.drawable.book2, 4.9f, 368, "Tác phẩm kinh điển về chủ nghĩa toàn trị"));
-
-        bookList.add(new Book(6, "Nghệ Thuật Bán Hàng", "Dale Carnegie", "Kỹ năng sống",
-                R.drawable.book3, 4.4f, 288, "Bí quyết thành công trong kinh doanh"));
-
-        bookList.add(new Book(7, "Vũ Trụ Trong Vỏ Hạt Dẻ", "Stephen Hawking", "Khoa học",
-                R.drawable.book1, 4.6f, 256, "Khám phá những bí ẩn của vũ trụ"));
-
-        bookList.add(new Book(8, "Lịch Sử Thế Giới", "John Morris Roberts", "Lịch sử",
-                R.drawable.book2, 4.3f, 640, "Tổng quan lịch sử nhân loại qua các thời kỳ"));
-    }
-
     private void setupRecyclerView() {
+        bookList = new ArrayList<>();
         bookAdapter = new BookAdapter(this, bookList, this);
         recyclerViewBooks.setLayoutManager(new LinearLayoutManager(this));
         recyclerViewBooks.setAdapter(bookAdapter);
+    }
+
+    private void loadBooksFromFirebase() {
+        databaseReference.child("books")
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        bookList.clear();
+                        for (DataSnapshot bookSnapshot : snapshot.getChildren()) {
+                            Book book = bookSnapshot.getValue(Book.class);
+                            if (book != null) {
+                                bookList.add(book);
+                            }
+                        }
+                        bookAdapter.updateBookList(bookList);
+                        updateBookCount();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Toast.makeText(LibraryActivity.this,
+                                "Lỗi: " + error.getMessage(),
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    private void loadBooksByCategory(String category) {
+        if (category.equals("Tất cả")) {
+            loadBooksFromFirebase();
+            return;
+        }
+
+        databaseReference.child("books")
+                .orderByChild("category")
+                .equalTo(category)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        bookList.clear();
+                        for (DataSnapshot bookSnapshot : snapshot.getChildren()) {
+                            Book book = bookSnapshot.getValue(Book.class);
+                            if (book != null) {
+                                bookList.add(book);
+                            }
+                        }
+                        bookAdapter.updateBookList(bookList);
+                        updateBookCount();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Toast.makeText(LibraryActivity.this,
+                                "Lỗi: " + error.getMessage(),
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     private void setupSearch() {
@@ -126,7 +154,6 @@ public class LibraryActivity extends AppCompatActivity implements BookAdapter.On
                 bookAdapter.filter(s.toString());
                 updateBookCount();
 
-                // Show/hide clear button
                 if (s.length() > 0) {
                     btnClearSearch.setVisibility(View.VISIBLE);
                 } else {
@@ -148,40 +175,35 @@ public class LibraryActivity extends AppCompatActivity implements BookAdapter.On
         chipAll.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 currentCategory = "Tất cả";
-                bookAdapter.filterByCategory(currentCategory);
-                updateBookCount();
+                loadBooksByCategory(currentCategory);
             }
         });
 
         chipNovel.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 currentCategory = "Tiểu thuyết";
-                bookAdapter.filterByCategory(currentCategory);
-                updateBookCount();
+                loadBooksByCategory(currentCategory);
             }
         });
 
         chipScience.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 currentCategory = "Khoa học";
-                bookAdapter.filterByCategory(currentCategory);
-                updateBookCount();
+                loadBooksByCategory(currentCategory);
             }
         });
 
         chipHistory.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 currentCategory = "Lịch sử";
-                bookAdapter.filterByCategory(currentCategory);
-                updateBookCount();
+                loadBooksByCategory(currentCategory);
             }
         });
 
         chipSelfHelp.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 currentCategory = "Kỹ năng sống";
-                bookAdapter.filterByCategory(currentCategory);
-                updateBookCount();
+                loadBooksByCategory(currentCategory);
             }
         });
     }
@@ -190,7 +212,6 @@ public class LibraryActivity extends AppCompatActivity implements BookAdapter.On
         btnBack.setOnClickListener(v -> finish());
 
         btnFilter.setOnClickListener(v -> {
-            // TODO: Implement advanced filter dialog
             Toast.makeText(this, "Chức năng lọc nâng cao", Toast.LENGTH_SHORT).show();
         });
     }
@@ -199,7 +220,6 @@ public class LibraryActivity extends AppCompatActivity implements BookAdapter.On
         int count = bookAdapter.getItemCount();
         tvBookCount.setText("Tìm thấy " + count + " cuốn sách");
 
-        // Show/hide empty state
         if (count == 0) {
             emptyState.setVisibility(View.VISIBLE);
             recyclerViewBooks.setVisibility(View.GONE);
@@ -209,24 +229,60 @@ public class LibraryActivity extends AppCompatActivity implements BookAdapter.On
         }
     }
 
-    // BookAdapter.OnBookClickListener implementations
     @Override
     public void onBookClick(Book book) {
-        // TODO: Navigate to BookDetailActivity
         Intent intent = new Intent(this, BookDetailActivity.class);
         intent.putExtra("bookId", book.getId());
-        intent.putExtra("bookTitle", book.getTitle());
         startActivity(intent);
     }
 
     @Override
     public void onFavoriteClick(Book book, int position) {
-        if (book.isFavorite()) {
-            Toast.makeText(this, "Đã thêm vào yêu thích", Toast.LENGTH_SHORT).show();
-            // TODO: Save to database/SharedPreferences
-        } else {
-            Toast.makeText(this, "Đã xóa khỏi yêu thích", Toast.LENGTH_SHORT).show();
-            // TODO: Remove from database/SharedPreferences
-        }
+        // Kiểm tra xem đã yêu thích chưa
+        DatabaseReference favRef = databaseReference.child("favorites")
+                .child(userId)
+                .child(book.getId());
+
+        favRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    // Đã yêu thích -> Xóa
+                    favRef.removeValue()
+                            .addOnSuccessListener(aVoid -> {
+                                Toast.makeText(LibraryActivity.this,
+                                        "Đã xóa khỏi yêu thích",
+                                        Toast.LENGTH_SHORT).show();
+                                bookAdapter.setBookFavorite(position, false);
+                            })
+                            .addOnFailureListener(e -> {
+                                Toast.makeText(LibraryActivity.this,
+                                        "Lỗi: " + e.getMessage(),
+                                        Toast.LENGTH_SHORT).show();
+                            });
+                } else {
+                    // Chưa yêu thích -> Thêm
+                    favRef.setValue(book)
+                            .addOnSuccessListener(aVoid -> {
+                                Toast.makeText(LibraryActivity.this,
+                                        "Đã thêm vào yêu thích",
+                                        Toast.LENGTH_SHORT).show();
+                                bookAdapter.setBookFavorite(position, true);
+                            })
+                            .addOnFailureListener(e -> {
+                                Toast.makeText(LibraryActivity.this,
+                                        "Lỗi: " + e.getMessage(),
+                                        Toast.LENGTH_SHORT).show();
+                            });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(LibraryActivity.this,
+                        "Lỗi: " + error.getMessage(),
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

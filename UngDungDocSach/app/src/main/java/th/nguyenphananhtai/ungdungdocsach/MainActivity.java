@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
 
     CardView cardLibrary, cardCategory, cardFavorite, cardSettings;
 
-    ImageView imgProfile;
+    CardView imgProfile;
     TextView tvUsername;
 
     Handler sliderHandler = new Handler();

@@ -10,6 +10,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,14 +50,18 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
         holder.tvCategory.setText(book.getCategory());
         holder.tvRating.setText(String.format("%.1f", book.getRating()));
         holder.tvPages.setText(String.valueOf(book.getPages()));
-        holder.imgCover.setImageResource(book.getCoverImage());
 
-        // Set favorite icon
-        if (book.isFavorite()) {
-            holder.btnFavorite.setImageResource(R.drawable.ic_favorite_filled);
-        } else {
-            holder.btnFavorite.setImageResource(R.drawable.ic_favorite_border);
-        }
+        // Load ảnh từ URL bằng Glide thay vì setImageResource
+        Glide.with(context)
+                .load(book.getCoverUrl())
+                .placeholder(R.drawable.book_placeholder)
+                .error(R.drawable.book_placeholder)
+                .centerCrop()
+                .into(holder.imgCover);
+
+        // Favorite icon - mặc định là chưa yêu thích
+        // (Sẽ check thật từ Firebase trong activity)
+        holder.btnFavorite.setImageResource(R.drawable.ic_favorite_border);
 
         // Click listeners
         holder.itemView.setOnClickListener(v -> {
@@ -66,9 +72,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
 
         holder.btnFavorite.setOnClickListener(v -> {
             if (listener != null) {
-                book.setFavorite(!book.isFavorite());
                 listener.onFavoriteClick(book, position);
-                notifyItemChanged(position);
             }
         });
     }
@@ -117,6 +121,13 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
         bookList.clear();
         bookList.addAll(newList);
         notifyDataSetChanged();
+    }
+
+    // Set favorite icon cho một item cụ thể
+    public void setBookFavorite(int position, boolean isFavorite) {
+        if (position >= 0 && position < bookList.size()) {
+            notifyItemChanged(position);
+        }
     }
 
     public static class BookViewHolder extends RecyclerView.ViewHolder {

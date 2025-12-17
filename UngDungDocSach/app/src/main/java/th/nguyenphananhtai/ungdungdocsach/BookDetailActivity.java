@@ -7,10 +7,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class BookDetailActivity extends AppCompatActivity {
 
@@ -19,7 +25,7 @@ public class BookDetailActivity extends AppCompatActivity {
     private TextView tvPagesDetail, tvCategoryDetail, tvDescriptionDetail;
     private CardView btnReadNow, btnDownload;
 
-    private LocalDataManager dataManager;
+    private DatabaseReference databaseReference;
     private String userId;
     private String bookId;
     private Book currentBook;
@@ -30,8 +36,8 @@ public class BookDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_detail);
 
-        // Initialize Local Data Manager
-        dataManager = LocalDataManager.getInstance(this);
+        // Initialize Firebase Database
+        databaseReference = FirebaseDatabase.getInstance().getReference();
 
         SharedPreferences prefs = getSharedPreferences("UserPrefs", MODE_PRIVATE);
         userId = prefs.getString("userId", "guest_" + System.currentTimeMillis());
@@ -66,21 +72,37 @@ public class BookDetailActivity extends AppCompatActivity {
     }
 
     private void loadBookDetails(String bookId) {
-        dataManager.getBookByIdAsync(bookId, new LocalDataManager.OnBookLoadedListener() {
-            @Override
-            public void onBookLoaded(Book book) {
-                currentBook = book;
-                displayBookDetails(book);
-            }
+        // Load book from Firebase
+        databaseReference.child("books").child(bookId)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if (snapshot.exists()) {
+                            currentBook = snapshot.getValue(Book.class);
+                            if (currentBook != null) {
+                                displayBookDetails(currentBook);
+                            } else {
+                                Toast.makeText(BookDetailActivity.this,
+                                        "Lỗi: Không thể tải thông tin sách",
+                                        Toast.LENGTH_SHORT).show();
+                                finish();
+                            }
+                        } else {
+                            Toast.makeText(BookDetailActivity.this,
+                                    "Sách không tồn tại",
+                                    Toast.LENGTH_SHORT).show();
+                            finish();
+                        }
+                    }
 
-            @Override
-            public void onError(String error) {
-                Toast.makeText(BookDetailActivity.this,
-                        "Lỗi tải sách: " + error,
-                        Toast.LENGTH_SHORT).show();
-                finish();
-            }
-        });
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Toast.makeText(BookDetailActivity.this,
+                                "Lỗi tải sách: " + error.getMessage(),
+                                Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
+                });
     }
 
     private void displayBookDetails(Book book) {
@@ -104,10 +126,20 @@ public class BookDetailActivity extends AppCompatActivity {
     }
 
     private void checkFavoriteStatus() {
-        dataManager.isFavoriteAsync(userId, bookId, isFav -> {
-            isFavorite = isFav;
-            updateFavoriteIcon();
-        });
+        // Check if book is in favorites
+        databaseReference.child("favorites").child(userId).child(bookId)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        isFavorite = snapshot.exists();
+                        updateFavoriteIcon();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Log.e("BookDetail", "Error checking favorite: " + error.getMessage());
+                    }
+                });
     }
 
     private void updateFavoriteIcon() {
@@ -127,6 +159,10 @@ public class BookDetailActivity extends AppCompatActivity {
             if (currentBook != null) {
                 Toast.makeText(this, "Mở trình đọc sách: " + currentBook.getTitle(),
                         Toast.LENGTH_SHORT).show();
+                // TODO: Mở ReaderActivity
+                // Intent intent = new Intent(this, ReaderActivity.class);
+                // intent.putExtra("bookId", bookId);
+                // startActivity(intent);
             }
         });
 
@@ -134,6 +170,7 @@ public class BookDetailActivity extends AppCompatActivity {
             if (currentBook != null) {
                 Toast.makeText(this, "Đang tải xuống: " + currentBook.getTitle(),
                         Toast.LENGTH_SHORT).show();
+                // TODO: Implement download functionality
             }
         });
     }
@@ -141,29 +178,37 @@ public class BookDetailActivity extends AppCompatActivity {
     private void toggleFavorite() {
         if (currentBook == null) return;
 
+        DatabaseReference favRef = databaseReference.child("favorites").child(userId).child(bookId);
+
         if (isFavorite) {
-            dataManager.removeFromFavorites(userId, bookId,
-                    new LocalDataManager.OnOperationListener() {
-                        @Override
-                        public void onSuccess() {
-                            isFavorite = false;
-                            updateFavoriteIcon();
-                            Toast.makeText(BookDetailActivity.this,
-                                    "Đã xóa khỏi yêu thích",
-                                    Toast.LENGTH_SHORT).show();
-                        }
+            // Remove from favorites
+            favRef.removeValue()
+                    .addOnSuccessListener(aVoid -> {
+                        isFavorite = false;
+                        updateFavoriteIcon();
+                        Toast.makeText(BookDetailActivity.this,
+                                "Đã xóa khỏi yêu thích",
+                                Toast.LENGTH_SHORT).show();
+                    })
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(BookDetailActivity.this,
+                                "Lỗi: " + e.getMessage(),
+                                Toast.LENGTH_SHORT).show();
                     });
         } else {
-            dataManager.addToFavorites(userId, bookId,
-                    new LocalDataManager.OnOperationListener() {
-                        @Override
-                        public void onSuccess() {
-                            isFavorite = true;
-                            updateFavoriteIcon();
-                            Toast.makeText(BookDetailActivity.this,
-                                    "Đã thêm vào yêu thích",
-                                    Toast.LENGTH_SHORT).show();
-                        }
+            // Add to favorites
+            favRef.setValue(currentBook)
+                    .addOnSuccessListener(aVoid -> {
+                        isFavorite = true;
+                        updateFavoriteIcon();
+                        Toast.makeText(BookDetailActivity.this,
+                                "Đã thêm vào yêu thích",
+                                Toast.LENGTH_SHORT).show();
+                    })
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(BookDetailActivity.this,
+                                "Lỗi: " + e.getMessage(),
+                                Toast.LENGTH_SHORT).show();
                     });
         }
     }
@@ -179,11 +224,14 @@ public class BookDetailActivity extends AppCompatActivity {
                 book.getPages()
         );
 
-        dataManager.saveReadingHistory(userId, history, new LocalDataManager.OnOperationListener() {
-            @Override
-            public void onSuccess() {
-                Log.d("BookDetail", "Saved to reading history");
-            }
-        });
+        // Save to Firebase
+        databaseReference.child("reading_history").child(userId).child(bookId)
+                .setValue(history)
+                .addOnSuccessListener(aVoid -> {
+                    Log.d("BookDetail", "Saved to reading history");
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("BookDetail", "Failed to save history: " + e.getMessage());
+                });
     }
 }
