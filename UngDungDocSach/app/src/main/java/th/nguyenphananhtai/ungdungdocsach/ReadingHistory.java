@@ -5,23 +5,24 @@ public class ReadingHistory {
     private String bookId;
     private String userId;
     private long lastReadTime;
-    private int currentPage;
-    private int totalPages;
+    private long currentPage;
+    private long totalPages;
     private float progress;
 
     // Denormalized book info
     private String bookTitle;
     private String bookAuthor;
-    private String bookCoverUrl;  // Phải khớp với Firebase
+    private String bookCoverUrl;
     private String bookCategory;
 
-    // Constructor rỗng BẮT BUỘC cho Firebase
-    public ReadingHistory(String id, String userId, String title, String author, String coverUrl, String category, long pages) {
+    // 1. Constructor rỗng (Bắt buộc cho Firebase)
+    public ReadingHistory() {
     }
 
+    // 2. Constructor đầy đủ
     public ReadingHistory(String bookId, String userId, String bookTitle,
                           String bookAuthor, String bookCoverUrl, String bookCategory,
-                          int totalPages) {
+                          long totalPages) {
         this.bookId = bookId;
         this.userId = userId;
         this.bookTitle = bookTitle;
@@ -35,102 +36,43 @@ public class ReadingHistory {
     }
 
     // Getters and Setters
-    public String getId() {
-        return id;
-    }
+    public String getId() { return id; }
+    public void setId(String id) { this.id = id; }
 
-    public void setId(String id) {
-        this.id = id;
-    }
+    public String getBookId() { return bookId; }
+    public void setBookId(String bookId) { this.bookId = bookId; }
 
-    public String getBookId() {
-        return bookId;
-    }
+    public String getUserId() { return userId; }
+    public void setUserId(String userId) { this.userId = userId; }
 
-    public void setBookId(String bookId) {
-        this.bookId = bookId;
-    }
+    public long getLastReadTime() { return lastReadTime; }
+    public void setLastReadTime(long lastReadTime) { this.lastReadTime = lastReadTime; }
 
-    public String getUserId() {
-        return userId;
-    }
+    public long getCurrentPage() { return currentPage; }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public long getLastReadTime() {
-        return lastReadTime;
-    }
-
-    public void setLastReadTime(long lastReadTime) {
-        this.lastReadTime = lastReadTime;
-    }
-
-    public int getCurrentPage() {
-        return currentPage;
-    }
-
-    public void setCurrentPage(int currentPage) {
+    public void setCurrentPage(long currentPage) {
         this.currentPage = currentPage;
-        updateProgress();
     }
 
-    public int getTotalPages() {
-        return totalPages;
-    }
+    public long getTotalPages() { return totalPages; }
+    public void setTotalPages(long totalPages) { this.totalPages = totalPages; }
 
-    public void setTotalPages(int totalPages) {
-        this.totalPages = totalPages;
-    }
+    public float getProgress() { return progress; }
+    public void setProgress(float progress) { this.progress = progress; }
 
-    public float getProgress() {
-        return progress;
-    }
+    public String getBookTitle() { return bookTitle; }
+    public void setBookTitle(String bookTitle) { this.bookTitle = bookTitle; }
 
-    public void setProgress(float progress) {
-        this.progress = progress;
-    }
+    public String getBookAuthor() { return bookAuthor; }
+    public void setBookAuthor(String bookAuthor) { this.bookAuthor = bookAuthor; }
 
-    public String getBookTitle() {
-        return bookTitle;
-    }
+    public String getBookCoverUrl() { return bookCoverUrl; }
+    public void setBookCoverUrl(String bookCoverUrl) { this.bookCoverUrl = bookCoverUrl; }
 
-    public void setBookTitle(String bookTitle) {
-        this.bookTitle = bookTitle;
-    }
+    public String getBookCategory() { return bookCategory; }
+    public void setBookCategory(String bookCategory) { this.bookCategory = bookCategory; }
 
-    public String getBookAuthor() {
-        return bookAuthor;
-    }
-
-    public void setBookAuthor(String bookAuthor) {
-        this.bookAuthor = bookAuthor;
-    }
-
-    public String getBookCoverUrl() {  // GETTER ĐÚNG
-        return bookCoverUrl;
-    }
-
-    public void setBookCoverUrl(String bookCoverUrl) {
-        this.bookCoverUrl = bookCoverUrl;
-    }
-
-    public String getBookCategory() {
-        return bookCategory;
-    }
-
-    public void setBookCategory(String bookCategory) {
-        this.bookCategory = bookCategory;
-    }
-
-    // Helper methods
-    private void updateProgress() {
-        if (totalPages > 0) {
-            this.progress = (float) currentPage / totalPages * 100;
-        }
-    }
-
+    // Helper methods hiển thị
     public String getProgressText() {
         return String.format("%.0f%%", progress);
     }

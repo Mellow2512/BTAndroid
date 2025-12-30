@@ -6,17 +6,20 @@ public class Book {
     private String author;
     private String category;
     private String coverUrl;
-    private float rating;
+    private double rating;
     private long pages;
     private String description;
     private long createdAt;
+    private String content;
+    private boolean isFavorite = false;
 
+    // 1. Constructor rỗng (BẮT BUỘC cho Firebase)
     public Book() {
     }
 
-    // Constructor đầy đủ
+    // 2. Constructor đầy đủ (Cập nhật kiểu dữ liệu double và long)
     public Book(String id, String title, String author, String category,
-                String coverUrl, float rating, int pages, String description) {
+                String coverUrl, double rating, long pages, String description) {
         this.id = id;
         this.title = title;
         this.author = author;
@@ -28,7 +31,14 @@ public class Book {
         this.createdAt = System.currentTimeMillis();
     }
 
-    // Getters và Setters - TÊN PHẢI KHỚP
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
     public String getId() {
         return id;
     }
@@ -61,7 +71,7 @@ public class Book {
         this.category = category;
     }
 
-    public String getCoverUrl() {  // ĐÂY LÀ GETTER ĐÚNG
+    public String getCoverUrl() {
         return coverUrl;
     }
 
@@ -69,19 +79,22 @@ public class Book {
         this.coverUrl = coverUrl;
     }
 
-    public float getRating() {
+    // Getter rating trả về double
+    public double getRating() {
         return rating;
     }
 
-    public void setRating(float rating) {
+    // Setter rating nhận vào double
+    public void setRating(double rating) {
         this.rating = rating;
     }
 
+    // Getter pages trả về long
     public long getPages() {
         return pages;
     }
 
-    public void setPages(int pages) {
+    public void setPages(long pages) {
         this.pages = pages;
     }
 
@@ -99,5 +112,13 @@ public class Book {
 
     public void setCreatedAt(long createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public boolean isFavorite() {
+        return isFavorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        isFavorite = favorite;
     }
 }

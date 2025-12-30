@@ -8,6 +8,9 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.load.model.GlideUrl;
+import com.bumptech.glide.load.model.LazyHeaders;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -53,8 +56,13 @@ public class ReadingHistoryAdapter extends RecyclerView.Adapter<ReadingHistoryAd
         holder.progressBar.setProgress((int) history.getProgress());
 
         // Load cover image
+        GlideUrl glideUrl = new GlideUrl(history.getBookCoverUrl(), new LazyHeaders.Builder()
+                .addHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
+                .addHeader("Referer", "https://tiki.vn/")
+                .build());
+
         Glide.with(context)
-                .load(history.getBookCoverUrl())
+                .load(glideUrl)
                 .placeholder(R.drawable.book_placeholder)
                 .error(R.drawable.book_placeholder)
                 .centerCrop()

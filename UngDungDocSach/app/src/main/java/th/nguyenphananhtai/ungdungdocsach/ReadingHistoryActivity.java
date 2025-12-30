@@ -1,6 +1,5 @@
 package th.nguyenphananhtai.ungdungdocsach;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -16,7 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -33,7 +32,8 @@ public class ReadingHistoryActivity extends AppCompatActivity
     private RecyclerView recyclerViewHistory;
     private TextView tvTotalBooks, tvReadingBooks, tvCompletedBooks;
     private LinearLayout emptyState;
-    private Chip chipAll, chipReading, chipCompleted;
+
+    private ChipGroup chipGroupHistory;
 
     private ReadingHistoryAdapter adapter;
     private List<ReadingHistory> historyList;
@@ -46,10 +46,7 @@ public class ReadingHistoryActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reading_history);
 
-        // Initialize Firebase Database
         databaseReference = FirebaseDatabase.getInstance().getReference();
-
-        // Get userId from SharedPreferences
         SharedPreferences prefs = getSharedPreferences("UserPrefs", MODE_PRIVATE);
         userId = prefs.getString("userId", "guest_" + System.currentTimeMillis());
 
@@ -68,9 +65,8 @@ public class ReadingHistoryActivity extends AppCompatActivity
         tvCompletedBooks = findViewById(R.id.tvCompletedBooks);
         emptyState = findViewById(R.id.emptyState);
 
-        chipAll = findViewById(R.id.chipAll);
-        chipReading = findViewById(R.id.chipReading);
-        chipCompleted = findViewById(R.id.chipCompleted);
+        // Ánh xạ ChipGroup
+        chipGroupHistory = findViewById(R.id.chipGroupHistory);
     }
 
     private void setupRecyclerView() {
@@ -81,22 +77,24 @@ public class ReadingHistoryActivity extends AppCompatActivity
     }
 
     private void loadReadingHistory() {
-        // Load from Firebase Realtime Database
         databaseReference.child("reading_history").child(userId)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         historyList.clear();
-
                         for (DataSnapshot historySnapshot : snapshot.getChildren()) {
                             ReadingHistory history = historySnapshot.getValue(ReadingHistory.class);
                             if (history != null) {
                                 historyList.add(history);
                             }
                         }
-
-                        adapter.updateHistoryList(historyList);
+                        // Tạo bản sao để tránh xung đột
+                        adapter.updateHistoryList(new ArrayList<>(historyList));
                         updateStats();
+
+                        // Lọc lại dữ liệu dựa trên chip đang chọn (để giữ trạng thái lọc khi data thay đổi)
+                        int checkedId = chipGroupHistory.getCheckedChipId();
+                        filterByChipId(checkedId);
 
                         if (historyList.isEmpty()) {
                             showEmptyState();
@@ -107,9 +105,7 @@ public class ReadingHistoryActivity extends AppCompatActivity
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
-                        Toast.makeText(ReadingHistoryActivity.this,
-                                "Lỗi: " + error.getMessage(),
-                                Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ReadingHistoryActivity.this, "Lỗi: " + error.getMessage(), Toast.LENGTH_SHORT).show();
                         showEmptyState();
                     }
                 });
@@ -138,32 +134,30 @@ public class ReadingHistoryActivity extends AppCompatActivity
 
         btnClearHistory.setOnClickListener(v -> showClearHistoryDialog());
 
-        chipAll.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) {
-                adapter.filterByStatus("Tất cả");
-            }
+        // --- SỬA: Lắng nghe sự kiện trên ChipGroup ---
+        chipGroupHistory.setOnCheckedChangeListener((group, checkedId) -> {
+            filterByChipId(checkedId);
         });
+    }
 
-        chipReading.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) {
-                adapter.filterByStatus("Đang đọc");
-            }
-        });
-
-        chipCompleted.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) {
-                adapter.filterByStatus("Hoàn thành");
-            }
-        });
+    // Hàm phụ trợ để lọc dữ liệu
+    private void filterByChipId(int checkedId) {
+        if (checkedId == R.id.chipAll) {
+            adapter.filterByStatus("Tất cả");
+        } else if (checkedId == R.id.chipReading) {
+            adapter.filterByStatus("Đang đọc");
+        } else if (checkedId == R.id.chipCompleted) {
+            adapter.filterByStatus("Hoàn thành");
+        } else {
+            adapter.filterByStatus("Tất cả"); // Mặc định
+        }
     }
 
     private void showClearHistoryDialog() {
         new AlertDialog.Builder(this)
                 .setTitle("Xóa lịch sử")
                 .setMessage("Bạn có chắc muốn xóa toàn bộ lịch sử đọc?")
-                .setPositiveButton("Xóa", (dialog, which) -> {
-                    clearAllHistory();
-                })
+                .setPositiveButton("Xóa", (dialog, which) -> clearAllHistory())
                 .setNegativeButton("Hủy", null)
                 .show();
     }
@@ -172,19 +166,10 @@ public class ReadingHistoryActivity extends AppCompatActivity
         databaseReference.child("reading_history").child(userId)
                 .removeValue()
                 .addOnSuccessListener(aVoid -> {
-                    Toast.makeText(ReadingHistoryActivity.this,
-                            "Đã xóa lịch sử",
-                            Toast.LENGTH_SHORT).show();
-                    historyList.clear();
-                    adapter.notifyDataSetChanged();
-                    updateStats();
-                    showEmptyState();
+                    Toast.makeText(ReadingHistoryActivity.this, "Đã xóa lịch sử", Toast.LENGTH_SHORT).show();
+                    // Không cần update manual vì addValueEventListener sẽ tự chạy
                 })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(ReadingHistoryActivity.this,
-                            "Lỗi: " + e.getMessage(),
-                            Toast.LENGTH_SHORT).show();
-                });
+                .addOnFailureListener(e -> Toast.makeText(ReadingHistoryActivity.this, "Lỗi: " + e.getMessage(), Toast.LENGTH_SHORT).show());
     }
 
     private void showEmptyState() {
@@ -199,7 +184,6 @@ public class ReadingHistoryActivity extends AppCompatActivity
 
     @Override
     public void onHistoryClick(ReadingHistory history) {
-        // Mở chi tiết sách
         Intent intent = new Intent(this, BookDetailActivity.class);
         intent.putExtra("bookId", history.getBookId());
         startActivity(intent);
@@ -207,15 +191,8 @@ public class ReadingHistoryActivity extends AppCompatActivity
 
     @Override
     public void onContinueClick(ReadingHistory history) {
-        // Tiếp tục đọc
-        Toast.makeText(this,
-                "Tiếp tục đọc: " + history.getBookTitle(),
-                Toast.LENGTH_SHORT).show();
-
-        // TODO: Mở reader activity
-        // Intent intent = new Intent(this, ReaderActivity.class);
-        // intent.putExtra("bookId", history.getBookId());
-        // intent.putExtra("currentPage", history.getCurrentPage());
-        // startActivity(intent);
+        Intent intent = new Intent(this, ReadBookActivity.class);
+        intent.putExtra("bookId", history.getBookId());
+        startActivity(intent);
     }
 }

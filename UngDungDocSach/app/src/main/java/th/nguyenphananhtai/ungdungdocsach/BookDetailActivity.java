@@ -1,5 +1,6 @@
 package th.nguyenphananhtai.ungdungdocsach;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -157,12 +158,10 @@ public class BookDetailActivity extends AppCompatActivity {
 
         btnReadNow.setOnClickListener(v -> {
             if (currentBook != null) {
-                Toast.makeText(this, "Mở trình đọc sách: " + currentBook.getTitle(),
-                        Toast.LENGTH_SHORT).show();
-                // TODO: Mở ReaderActivity
-                // Intent intent = new Intent(this, ReaderActivity.class);
-                // intent.putExtra("bookId", bookId);
-                // startActivity(intent);
+                // Chuyển sang màn hình đọc sách
+                Intent intent = new Intent(BookDetailActivity.this, ReadBookActivity.class);
+                intent.putExtra("bookId", currentBook.getId());
+                startActivity(intent);
             }
         });
 

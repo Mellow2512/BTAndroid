@@ -6,7 +6,6 @@
     android:orientation="vertical"
     android:background="#F8F9FA">
 
-    <!-- Header với Back Button -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -45,7 +44,6 @@
             android:contentDescription="Filter"/>
     </RelativeLayout>
 
-    <!-- Search Bar -->
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -88,20 +86,20 @@
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
-    <!-- Filter Chips -->
     <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:scrollbars="none"
         android:layout_marginBottom="12dp">
 
-        <LinearLayout
-            android:id="@+id/chipContainer"
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chipGroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:paddingStart="16dp"
-            android:paddingEnd="16dp">
+            android:paddingEnd="16dp"
+            app:singleSelection="true"
+            app:selectionRequired="true">
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chipAll"
@@ -143,10 +141,10 @@
                 android:layout_height="wrap_content"
                 android:text="Kỹ năng sống"
                 android:layout_marginEnd="8dp"/>
-        </LinearLayout>
+
+        </com.google.android.material.chip.ChipGroup>
     </HorizontalScrollView>
 
-    <!-- Books Count -->
     <TextView
         android:id="@+id/tvBookCount"
         android:layout_width="wrap_content"
@@ -157,7 +155,6 @@
         android:layout_marginStart="20dp"
         android:layout_marginBottom="8dp"/>
 
-    <!-- RecyclerView for Books -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewBooks"
         android:layout_width="match_parent"
@@ -167,7 +164,6 @@
         android:paddingEnd="12dp"
         android:clipToPadding="false"/>
 
-    <!-- Empty State -->
     <LinearLayout
         android:id="@+id/emptyState"
         android:layout_width="match_parent"

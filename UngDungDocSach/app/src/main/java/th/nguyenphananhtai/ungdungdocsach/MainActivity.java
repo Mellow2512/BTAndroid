@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -39,6 +38,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // --- 0. QUAN TRỌNG: KHỞI TẠO USER ID NGAY KHI MỞ APP ---
+        // Đoạn này đảm bảo ID luôn tồn tại trước khi vào các màn hình khác
+        setupUserId();
+
         // --- 1. SETUP HEADER (PROFILE) ---
         imgProfile = findViewById(R.id.imgProfile);
         tvUsername = findViewById(R.id.tvUsername);
@@ -65,10 +68,7 @@ public class MainActivity extends AppCompatActivity {
         adapter = new CarouselAdapter(this, images);
         viewPager.setAdapter(adapter);
 
-        // Thiết lập hiệu ứng chuyển trang mượt mà
         setupViewPagerTransformer();
-
-        // Tạo Page Indicator
         setupIndicators(images.size());
         setCurrentIndicator(0);
 
@@ -84,13 +84,12 @@ public class MainActivity extends AppCompatActivity {
                     } else {
                         viewPager.setCurrentItem(0);
                     }
-                    sliderHandler.postDelayed(this, 3500); // 3.5 giây
+                    sliderHandler.postDelayed(this, 3500);
                 }
             }
         };
         sliderHandler.postDelayed(sliderRunnable, 3500);
 
-        // Callback khi trang thay đổi
         viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
@@ -120,14 +119,28 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, SettingsActivity.class)));
     }
 
-    // --- THIẾT LẬP HIỆU ỨNG CHUYỂN TRANG ---
+    // --- HÀM MỚI: Tách logic tạo ID ra riêng để gọi trong onCreate ---
+    private void setupUserId() {
+        SharedPreferences prefs = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+        String userId = prefs.getString("userId", null);
+
+        if (userId == null) {
+            // Nếu chưa có ID, tạo mới và LƯU LẠI NGAY LẬP TỨC
+            userId = "guest_" + System.currentTimeMillis();
+            prefs.edit().putString("userId", userId).apply();
+        }
+    }
+
+    // --- Cập nhật lại hàm này: Chỉ kiểm tra login, không tạo ID nữa ---
+    private boolean isUserLoggedIn() {
+        SharedPreferences prefs = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+        return prefs.getBoolean("isLoggedIn", false);
+    }
+
+    // --- Các hàm hỗ trợ giao diện khác giữ nguyên ---
     private void setupViewPagerTransformer() {
         CompositePageTransformer transformer = new CompositePageTransformer();
-
-        // Thêm margin giữa các trang
         transformer.addTransformer(new MarginPageTransformer(40));
-
-        // Thêm hiệu ứng scale khi chuyển trang
         transformer.addTransformer((page, position) -> {
             float absPosition = Math.abs(position);
             if (absPosition >= 1) {
@@ -138,22 +151,16 @@ public class MainActivity extends AppCompatActivity {
                 page.setScaleY(scale);
             }
         });
-
         viewPager.setPageTransformer(transformer);
         viewPager.setOffscreenPageLimit(3);
     }
 
-    // --- TẠO CÁC INDICATOR DOTS ---
     private void setupIndicators(int count) {
         indicatorLayout.removeAllViews();
         ImageView[] indicators = new ImageView[count];
-
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-        );
+                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         params.setMargins(8, 0, 8, 0);
-
         for (int i = 0; i < count; i++) {
             indicators[i] = new ImageView(this);
             indicators[i].setImageDrawable(getDrawable(R.drawable.indicator_inactive));
@@ -162,7 +169,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    // --- CẬP NHẬT INDICATOR HIỆN TẠI ---
     private void setCurrentIndicator(int position) {
         int childCount = indicatorLayout.getChildCount();
         for (int i = 0; i < childCount; i++) {
@@ -173,12 +179,6 @@ public class MainActivity extends AppCompatActivity {
                 imageView.setImageDrawable(getDrawable(R.drawable.indicator_inactive));
             }
         }
-    }
-
-    // --- HÀM HỖ TRỢ LOGIN ---
-    private boolean isUserLoggedIn() {
-        SharedPreferences prefs = getSharedPreferences("UserPrefs", MODE_PRIVATE);
-        return prefs.getBoolean("isLoggedIn", false);
     }
 
     private void updateUIBasedOnLoginStatus() {
